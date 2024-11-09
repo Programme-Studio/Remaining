@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+		<key>AppGroupIdentifier</key>
+		<string>group.programme.remaining</string>
+		<key>BGTaskSchedulerPermittedIdentifiers</key>
+		<array>
+				<string>com.programme.app.refresh</string>
+		</array>
+		<key>UIBackgroundModes</key>
+		<array>
+				<string>fetch</string>
+				<string>processing</string>
+		</array>
+		<key>CFBundleIcons</key>
+		<dict>
+				<key>CFBundlePrimaryIcon</key>
+				<dict>
+						<key>CFBundleIconFiles</key>
+						<array>
+								<string>AppIcon</string>
+						</array>
+						<key>UIPrerenderedIcon</key>
+						<false/>
+				</dict>
+		</dict>
+</dict>
+</plist>
