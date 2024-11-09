@@ -110,6 +110,7 @@ struct SingleProgressBarEntryView: View {
                VStack(spacing: geometry.size.height * 0.01) {
                    HStack(spacing: 0) {
                        Text("0")
+                       
                            .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
                            .foregroundColor(Color(hex: "#6C6C6C"))
                        Spacer()
