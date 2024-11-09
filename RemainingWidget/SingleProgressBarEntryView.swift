@@ -19,7 +19,7 @@ struct SingleProgressBarEntryView: View {
 
    private var dayNumberFormatter: DateFormatter {
        let formatter = DateFormatter()
-       formatter.dateFormat = "d"
+       formatter.dateFormat = "dd"
        return formatter
    }
 
@@ -43,7 +43,7 @@ struct SingleProgressBarEntryView: View {
        case .systemMedium:
            return 35
        case .systemLarge:
-           return 60
+           return 45
        default:
            return 30
        }
@@ -56,7 +56,7 @@ struct SingleProgressBarEntryView: View {
        case .systemMedium:
            return 14
        case .systemLarge:
-           return 20
+           return 18
        default:
            return 12
        }
