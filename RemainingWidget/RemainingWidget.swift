@@ -131,7 +131,7 @@ struct SingleProgressBarPreview: PreviewProvider {
                 remainingDays: 347,
                 completedDays: 533,
                 totalDays: 10,
-                percentageCompleted: 30,
+                percentageCompleted: 90,
                 gradientName: "PinkPurple",
                 title: "Primary Event"
             ),

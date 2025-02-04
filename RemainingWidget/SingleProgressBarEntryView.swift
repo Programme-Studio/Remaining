@@ -127,29 +127,62 @@ struct SingleProgressBarEntryView: View {
                            let progressWidth = CGFloat(entry.primaryData.percentageCompleted / 100) * progressGeometry.size.width
                            let percentageCompleted = Int(entry.primaryData.percentageCompleted)
                            let percentageLeft = 100 - percentageCompleted
+                           let remainingWidth = progressGeometry.size.width - progressWidth
 
                            ZStack(alignment: .leading) {
+                               // Background progress bar
                                Capsule()
                                    .fill(GradientOption.gradient(for: entry.primaryData.gradientName))
                                    .frame(width: progressWidth, height: getProgressBarHeight())
-                               if percentageCompleted > 15 {
-                                   VStack {
+                               
+                               if percentageCompleted >= 75 {
+                                   // When progress is ≥75%, show both percentages together in filled section
+                                   HStack(spacing: 2) {
                                        Text("\(percentageCompleted)%")
                                            .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
                                            .foregroundColor(.white)
-                                           .frame(width: progressWidth, alignment: .center)
+                                       Text("/")
+                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                           .foregroundColor(.white)
+                                           .opacity(0.5)
+                                       Text("\(percentageLeft)%")
+                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                           .foregroundColor(.white)
+                                           .opacity(0.5)
                                    }
-                                   .frame(height: getProgressBarHeight())
+                                   .frame(width: progressWidth, alignment: .center)
+                               } else if percentageCompleted <= 20 {
+                                   // When progress is ≤20%, show both percentages together in unfilled section
+                                   HStack(spacing: 2) {
+                                       Text("\(percentageCompleted)%")
+                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                           .foregroundColor(.white)
+                                           .opacity(0.5)
+                                       Text("/")
+                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                           .foregroundColor(.white)
+                                           .opacity(0.5)
+                                       Text("\(percentageLeft)%")
+                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                           .foregroundColor(.white)
+                                   }
+                                   .frame(width: remainingWidth, alignment: .center)
+                                   .offset(x: progressWidth)
+                               } else {
+                                   // Normal state (20% < progress < 75%)
+                                   HStack(spacing: 0) {
+                                       Text("\(percentageCompleted)%")
+                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                           .foregroundColor(.white)
+                                           .frame(width: progressWidth)
+                                       
+                                       Text("\(percentageLeft)%")
+                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                           .foregroundColor(.white)
+                                           .frame(width: remainingWidth)
+                                   }
                                }
                            }
-                           VStack {
-                               Text("\(percentageLeft)%")
-                                   .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
-                                   .foregroundColor(.white)
-                                   .frame(width: progressGeometry.size.width - progressWidth, alignment: .center)
-                                   .offset(x: progressWidth)
-                           }
-                           .frame(height: getProgressBarHeight())
                        }
                    }
                    .frame(height: getProgressBarHeight())
@@ -184,7 +217,7 @@ struct SingleProgressBarEntryView_Previews: PreviewProvider {
                    remainingDays: 347,
                    completedDays: 18,
                    totalDays: 365,
-                   percentageCompleted: 30,
+                   percentageCompleted: 10,
                    gradientName: "PinkPurple",
                    title: "Primary Event"
                ),
@@ -203,7 +236,7 @@ struct SingleProgressBarEntryView_Previews: PreviewProvider {
                    remainingDays: 347,
                    completedDays: 18,
                    totalDays: 365,
-                   percentageCompleted: 30,
+                   percentageCompleted: 10,
                    gradientName: "PinkPurple",
                    title: "Primary Event"
                ),
@@ -222,7 +255,7 @@ struct SingleProgressBarEntryView_Previews: PreviewProvider {
                    remainingDays: 347,
                    completedDays: 18,
                    totalDays: 365,
-                   percentageCompleted: 30,
+                   percentageCompleted: 10,
                    gradientName: "PinkPurple",
                    title: "Primary Event"
                ),
