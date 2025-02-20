@@ -120,67 +120,77 @@ struct SingleProgressBarEntryView: View {
                    }
                    
                    ZStack {
+                       // Background
                        Capsule()
+                           .fill(Color(hex: "#535252"))
                            .frame(height: getProgressBarHeight())
-                           .foregroundColor(Color(hex: "#535252"))
+                       
+                       // Progress with mask
+                       Capsule()
+                           .fill(GradientOption.gradient(for: entry.primaryData.gradientName))
+                           .frame(height: getProgressBarHeight())
+                           .mask(
+                               GeometryReader { geometry in
+                                   HStack(spacing: 0) {
+                                       Rectangle()
+                                           .frame(width: geometry.size.width * CGFloat(entry.primaryData.percentageCompleted / 100))
+                                       Rectangle()
+                                           .fill(.clear)
+                                   }
+                               }
+                           )
+                           
                        GeometryReader { progressGeometry in
                            let progressWidth = CGFloat(entry.primaryData.percentageCompleted / 100) * progressGeometry.size.width
                            let percentageCompleted = Int(entry.primaryData.percentageCompleted)
                            let percentageLeft = 100 - percentageCompleted
                            let remainingWidth = progressGeometry.size.width - progressWidth
 
-                           ZStack(alignment: .leading) {
-                               // Background progress bar
-                               Capsule()
-                                   .fill(GradientOption.gradient(for: entry.primaryData.gradientName))
-                                   .frame(width: progressWidth, height: getProgressBarHeight())
-                               
-                               if percentageCompleted >= 75 {
-                                   // When progress is ≥75%, show both percentages together in filled section
-                                   HStack(spacing: 2) {
-                                       Text("\(percentageCompleted)%")
-                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
-                                           .foregroundColor(.white)
-                                       Text("/")
-                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
-                                           .foregroundColor(.white)
-                                           .opacity(0.5)
-                                       Text("\(percentageLeft)%")
-                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
-                                           .foregroundColor(.white)
-                                           .opacity(0.5)
-                                   }
-                                   .frame(width: progressWidth, alignment: .center)
-                               } else if percentageCompleted <= 20 {
-                                   // When progress is ≤20%, show both percentages together in unfilled section
-                                   HStack(spacing: 2) {
-                                       Text("\(percentageCompleted)%")
-                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
-                                           .foregroundColor(.white)
-                                           .opacity(0.5)
-                                       Text("/")
-                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
-                                           .foregroundColor(.white)
-                                           .opacity(0.5)
-                                       Text("\(percentageLeft)%")
-                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
-                                           .foregroundColor(.white)
-                                   }
-                                   .frame(width: remainingWidth, alignment: .center)
-                                   .offset(x: progressWidth)
-                               } else {
-                                   // Normal state (20% < progress < 75%)
-                                   HStack(spacing: 0) {
-                                       Text("\(percentageCompleted)%")
-                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
-                                           .foregroundColor(.white)
-                                           .frame(width: progressWidth)
-                                       
-                                       Text("\(percentageLeft)%")
-                                           .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
-                                           .foregroundColor(.white)
-                                           .frame(width: remainingWidth)
-                                   }
+                           if percentageCompleted >= 75 {
+                               // When progress is ≥75%, show both percentages together in filled section
+                               HStack(spacing: 2) {
+                                   Text("\(percentageCompleted)%")
+                                       .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                       .foregroundColor(.white)
+                                   Text("/")
+                                       .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                       .foregroundColor(.white)
+                                       .opacity(0.5)
+                                   Text("\(percentageLeft)%")
+                                       .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                       .foregroundColor(.white)
+                                       .opacity(0.5)
+                               }
+                               .frame(width: progressWidth, height: progressGeometry.size.height, alignment: .center)
+                           } else if percentageCompleted <= 20 {
+                               // When progress is ≤20%, show both percentages together in unfilled section
+                               HStack(spacing: 2) {
+                                   Text("\(percentageCompleted)%")
+                                       .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                       .foregroundColor(.white)
+                                       .opacity(0.5)
+                                   Text("/")
+                                       .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                       .foregroundColor(.white)
+                                       .opacity(0.5)
+                                   Text("\(percentageLeft)%")
+                                       .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                       .foregroundColor(.white)
+                               }
+                               .frame(width: remainingWidth, height: progressGeometry.size.height, alignment: .center)
+                               .offset(x: progressWidth)
+                           } else {
+                               // Normal state (20% < progress < 75%)
+                               HStack(spacing: 0) {
+                                   Text("\(percentageCompleted)%")
+                                       .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                       .foregroundColor(.white)
+                                       .frame(width: progressWidth, height: progressGeometry.size.height, alignment: .center)
+                                   
+                                   Text("\(percentageLeft)%")
+                                       .font(.system(size: getSecondaryFontSize(), weight: .regular, design: .monospaced))
+                                       .foregroundColor(.white)
+                                       .frame(width: remainingWidth, height: progressGeometry.size.height, alignment: .center)
                                }
                            }
                        }

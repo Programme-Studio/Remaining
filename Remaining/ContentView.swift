@@ -7,36 +7,80 @@ struct GradientProgressViewStyle: ProgressViewStyle {
     let gradient: LinearGradient
     
     func makeBody(configuration: Configuration) -> some View {
-        ZStack(alignment: .leading) {
+        ZStack {
+            // Background
             Capsule()
-                .foregroundColor(Color(hex: "#EAEAEA"))
+                .fill(Color(hex: "#EAEAEA"))
                 .frame(height: 30)
+            
+            // Progress with mask
+            Capsule()
+                .fill(gradient)
+                .frame(height: 30)
+                .mask(
+                    GeometryReader { geometry in
+                        HStack(spacing: 0) {
+                            Rectangle()
+                                .frame(width: geometry.size.width * CGFloat(configuration.fractionCompleted ?? 0))
+                            Rectangle()
+                                .fill(.clear)
+                        }
+                    }
+                )
+            
             GeometryReader { geometry in
                 let progressWidth = CGFloat(configuration.fractionCompleted ?? 0) * geometry.size.width
                 let percentageCompleted = Int((configuration.fractionCompleted ?? 0) * 100)
                 let percentageLeft = 100 - percentageCompleted
-                
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(gradient)
-                        .frame(width: progressWidth, height: 30)
-                    if percentageCompleted > 8 {
+                let remainingWidth = geometry.size.width - progressWidth
+
+                if percentageCompleted >= 75 {
+                    // When progress is ≥75%, show both percentages together in filled section
+                    HStack(spacing: 2) {
                         Text("\(percentageCompleted)%")
                             .font(.system(size: 12, weight: .regular, design: .monospaced))
                             .foregroundColor(.white)
-                            .frame(width: progressWidth, alignment: .center)
+                        Text("/")
+                            .font(.system(size: 12, weight: .regular, design: .monospaced))
+                            .foregroundColor(.white)
+                            .opacity(0.5)
+                        Text("\(percentageLeft)%")
+                            .font(.system(size: 12, weight: .regular, design: .monospaced))
+                            .foregroundColor(.white)
+                            .opacity(0.5)
+                    }
+                    .frame(width: progressWidth, height: geometry.size.height, alignment: .center)
+                } else if percentageCompleted <= 20 {
+                    // When progress is ≤20%, show both percentages together in unfilled section
+                    HStack(spacing: 2) {
+                        Text("\(percentageCompleted)%")
+                            .font(.system(size: 12, weight: .regular, design: .monospaced))
+                            .foregroundColor(Color(hex: "#878787"))
+                            .opacity(0.5)
+                        Text("/")
+                            .font(.system(size: 12, weight: .regular, design: .monospaced))
+                            .foregroundColor(Color(hex: "#878787"))
+                            .opacity(0.5)
+                        Text("\(percentageLeft)%")
+                            .font(.system(size: 12, weight: .regular, design: .monospaced))
+                            .foregroundColor(Color(hex: "#878787"))
+                    }
+                    .frame(width: remainingWidth, height: geometry.size.height, alignment: .center)
+                    .offset(x: progressWidth)
+                } else {
+                    // Normal state (20% < progress < 75%)
+                    HStack(spacing: 0) {
+                        Text("\(percentageCompleted)%")
+                            .font(.system(size: 12, weight: .regular, design: .monospaced))
+                            .foregroundColor(.white)
+                            .frame(width: progressWidth, height: geometry.size.height, alignment: .center)
+                        
+                        Text("\(percentageLeft)%")
+                            .font(.system(size: 12, weight: .regular, design: .monospaced))
+                            .foregroundColor(Color(hex: "#878787"))
+                            .frame(width: remainingWidth, height: geometry.size.height, alignment: .center)
                     }
                 }
-                .frame(height: 30)
-                
-                ZStack(alignment: .trailing) {
-                    Text("\(percentageLeft)%")
-                        .font(.system(size: 12, weight: .regular, design: .monospaced))
-                        .foregroundColor(Color(hex: "#878787"))
-                        .frame(width: geometry.size.width - progressWidth, alignment: .center)
-                        .offset(x: progressWidth)
-                }
-                .frame(height: 30)
             }
         }
     }
